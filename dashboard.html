@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="topbar">
+    <div>
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ session["user_name"] }}.</p>
+    </div>
+    <div class="business-name">Tess Mama Enterprise</div>
+</header>
+
+<section class="stats">
+    <div class="card">
+        <p>Today's Sales</p>
+        <h2>KSh {{ "%.2f"|format(sales) }}</h2>
+        <span class="muted">Revenue recorded today</span>
+    </div>
+
+    <div class="card">
+        <p>Today's Profit*</p>
+        <h2>KSh {{ "%.2f"|format(profit) }}</h2>
+        <span class="muted">Foundation estimate</span>
+    </div>
+
+    <div class="card">
+        <p>Expenses</p>
+        <h2>KSh {{ "%.2f"|format(expenses) }}</h2>
+        <span class="muted">Recorded today</span>
+    </div>
+
+    <div class="card">
+        <p>Stock Value</p>
+        <h2>KSh {{ "%.2f"|format(stock_value) }}</h2>
+        <span class="muted">At buying price</span>
+    </div>
+</section>
+
+<section class="dashboard-grid">
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <h2>Inventory Overview</h2>
+                <p class="muted">Live from the database</p>
+            </div>
+            <span class="badge">{{ product_count }} products</span>
+        </div>
+
+        <div class="inventory-summary">
+            <div>
+                <strong>{{ product_count }}</strong>
+                <span>Total Products</span>
+            </div>
+            <div>
+                <strong>{{ low_stock|length }}</strong>
+                <span>Low Stock</span>
+            </div>
+        </div>
+
+        <h3>Low Stock Alerts</h3>
+
+        {% if low_stock %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Stock</th>
+                        <th>Reorder</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for product in low_stock %}
+                    <tr>
+                        <td>{{ product["name"] }}</td>
+                        <td><span class="stock-low">{{ product["stock_quantity"] }}</span></td>
+                        <td>{{ product["reorder_level"] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty">No low-stock products.</div>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <h2>Recent Sales</h2>
+                <p class="muted">Latest transactions</p>
+            </div>
+        </div>
+
+        {% if recent_sales %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for sale in recent_sales %}
+                    <tr>
+                        <td>#{{ sale["id"] }}</td>
+                        <td>KSh {{ "%.2f"|format(sale["total_amount"]) }}</td>
+                        <td>{{ sale["payment_method"]|title }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty">No sales recorded yet.</div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="note">
+    <strong>* Profit:</strong> the current foundation shows sales minus recorded expenses.
+    True gross and net profit will be calculated after the POS and cost-of-goods module is added.
+</div>
+{% endblock %}
