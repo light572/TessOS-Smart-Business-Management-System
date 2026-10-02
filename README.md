@@ -1,15 +1,4 @@
-# TessOS
-Smart Business Management System for Tess Mama Enterprise.
-
-## v2
-- Mobile dashboard navigation
-- Product inventory management
-- Add, edit and delete products
-- Search and category filtering
-- Stock and reorder alerts
-- Stock valuation and potential revenue
-- Render-ready Gunicorn dependency
-
-Demo: `john` / `1234` (development only).
-
-Next: POS, automatic stock deduction, real profit, customers, suppliers, expenses, reports, WhatsApp, M-Pesa and AI.
+# TessOS v3
+All main navigation buttons now have working routes: Dashboard, POS, Products, Customers, Suppliers, Expenses, Reports and Logout.
+POS records sales and automatically reduces inventory. Development login: john / 1234.
+Deploy with: pip install -r requirements.txt ; gunicorn app:app
