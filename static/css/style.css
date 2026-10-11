@@ -43,4 +43,125 @@ th{color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
 .login-box small{display:block;color:#94a3b8;margin-top:22px}
 .error{background:#fee2e2;color:#991b1b;padding:10px;margin-bottom:15px;border-radius:8px;font-size:14px}
 @media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
-@media(max-width:700px){.sidebar{position:relative;width:100%;height:auto}.logout{position:static;display:block;margin-top:15px}.main{margin-left:0;padding:18px}.topbar{align-items:flex-start;flex-direction:column;gap:12px}.stats{grid-template-columns:1fr}.login-box{width:100%}}
+@media (max-width: 700px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 275px;
+        max-width: 85vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: auto;
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+        z-index: 100;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 90;
+    }
+
+    .overlay.show {
+        display: block;
+    }
+
+    .mobile-header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        z-index: 80;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 16px;
+        background: #101827;
+        color: #fff;
+    }
+
+    .menu-btn {
+        border: 0;
+        background: transparent;
+        color: #fff;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    .mobile-logo {
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    .mobile-logo span {
+        color: #d4af37;
+    }
+
+    .mobile-user {
+        font-size: 18px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .card {
+        padding: 16px;
+        min-width: 0;
+    }
+
+    .card h2 {
+        font-size: 18px;
+        overflow-wrap: anywhere;
+    }
+
+    .quick-actions,
+    .dashboard-grid,
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inventory-summary {
+        gap: 20px;
+        overflow-x: auto;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .product-actions > *,
+    .product-actions form {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .flash-area {
+        top: 65px;
+        right: 12px;
+        left: 12px;
+        max-width: none;
+    }
+}
