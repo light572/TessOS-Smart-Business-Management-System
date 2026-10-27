@@ -1,1 +1,191 @@
-{% extends 'base.html' %}{% block content %}<div class="top"><div><h1>Dashboard</h1><p>Good day, {{session['user_name']}} 👋</p></div><strong>Tess Mama Enterprise</strong></div><div class="stats"><div><small>Today's Sales</small><h2>KSh {{'%.2f'|format(sales)}}</h2></div><div><small>Today's Profit*</small><h2>KSh {{'%.2f'|format(profit)}}</h2></div><div><small>Expenses</small><h2>KSh {{'%.2f'|format(expenses)}}</h2></div><div><small>Stock Value</small><h2>KSh {{'%.2f'|format(stock_value)}}</h2></div></div><div class="actions"><a href="/pos">🛒 New Sale</a><a href="/products/add">＋ Add Product</a><a href="/expenses">◈ Add Expense</a></div><div class="grid"><section class="panel"><div class="between"><h2>Low Stock</h2><a href="/products">Manage →</a></div>{% if low_stock %}<table><tr><th>Product</th><th>Stock</th><th>Reorder</th></tr>{% for p in low_stock %}<tr><td>{{p['name']}}</td><td class="bad">{{p['stock_quantity']}}</td><td>{{p['reorder_level']}}</td></tr>{% endfor %}</table>{% else %}<p class="empty">All products are above reorder level.</p>{% endif %}</section><section class="panel"><h2>Recent Sales</h2>{% if recent_sales %}<table><tr><th>ID</th><th>Amount</th></tr>{% for s in recent_sales %}<tr><td>#{{s['id']}}</td><td>KSh {{'%.2f'|format(s['total_amount'])}}</td></tr>{% endfor %}</table>{% else %}<p class="empty">No sales yet.</p>{% endif %}</section></div>{% endblock %}
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="dash-page">
+
+    <header class="dash-top">
+        <div>
+            <span class="dash-eyebrow">BUSINESS OVERVIEW</span>
+            <h1>Dashboard</h1>
+            <p>Good day, {{ session['user_name'] }} 👋</p>
+        </div>
+        <div class="business-badge">
+            <span class="business-dot"></span>
+            Tess Mama Enterprise
+        </div>
+    </header>
+
+    <section class="dash-stats">
+
+        <article class="dash-stat sales-stat">
+            <div class="stat-heading">
+                <span>Today's Sales</span>
+                <span class="stat-icon">↗</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(sales) }}</h2>
+            <p>Total sales recorded today</p>
+        </article>
+
+        <article class="dash-stat">
+            <div class="stat-heading">
+                <span>Today's Profit*</span>
+                <span class="stat-icon">◆</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(profit) }}</h2>
+            <p>Based on current profit calculation</p>
+        </article>
+
+        <article class="dash-stat">
+            <div class="stat-heading">
+                <span>Expenses</span>
+                <span class="stat-icon">−</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(expenses) }}</h2>
+            <p>Expenses recorded today</p>
+        </article>
+
+        <article class="dash-stat">
+            <div class="stat-heading">
+                <span>Stock Value</span>
+                <span class="stat-icon">▦</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(stock_value) }}</h2>
+            <p>Current recorded inventory value</p>
+        </article>
+
+    </section>
+
+    <section class="dash-quick">
+        <div class="section-heading">
+            <div>
+                <h2>Quick actions</h2>
+                <p>Common tasks for your business</p>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <a class="quick-action primary-action" href="/pos">
+                <span class="quick-icon">＋</span>
+                <span>
+                    <strong>New Sale</strong>
+                    <small>Open point of sale</small>
+                </span>
+                <span class="quick-arrow">→</span>
+            </a>
+
+            <a class="quick-action" href="/products/add">
+                <span class="quick-icon">▤</span>
+                <span>
+                    <strong>Add Product</strong>
+                    <small>Update your inventory</small>
+                </span>
+                <span class="quick-arrow">→</span>
+            </a>
+
+            <a class="quick-action" href="/expenses">
+                <span class="quick-icon">−</span>
+                <span>
+                    <strong>Record Expense</strong>
+                    <small>Track business spending</small>
+                </span>
+                <span class="quick-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="dash-lower">
+
+        <article class="dash-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="panel-kicker">INVENTORY</span>
+                    <h2>Low stock</h2>
+                </div>
+                <a href="/products" class="panel-link">Manage products →</a>
+            </div>
+
+            {% if low_stock %}
+            <div class="dash-table-wrap">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>In stock</th>
+                            <th>Reorder level</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in low_stock %}
+                        <tr>
+                            <td class="product-name">{{ p['name'] }}</td>
+                            <td class="stock-number">{{ p['stock_quantity'] }}</td>
+                            <td>{{ p['reorder_level'] }}</td>
+                            <td>
+                                <span class="stock-status">Low stock</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="dash-empty">
+                <span class="empty-check">✓</span>
+                <strong>Stock looks good</strong>
+                <p>All products are above their reorder level.</p>
+            </div>
+            {% endif %}
+        </article>
+
+        <article class="dash-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="panel-kicker">TRANSACTIONS</span>
+                    <h2>Recent sales</h2>
+                </div>
+                <a href="/reports" class="panel-link">Reports →</a>
+            </div>
+
+            {% if recent_sales %}
+            <div class="dash-table-wrap">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th>Sale ID</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in recent_sales %}
+                        <tr>
+                            <td class="product-name">#{{ s['id'] }}</td>
+                            <td class="sale-amount">
+                                KSh {{ '%.2f'|format(s['total_amount']) }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="dash-empty">
+                <span class="empty-symbol">↗</span>
+                <strong>No sales yet</strong>
+                <p>Your recorded sales will appear here.</p>
+                <a href="/pos" class="empty-action">Start a sale →</a>
+            </div>
+            {% endif %}
+        </article>
+
+    </section>
+
+    <p class="dash-note">
+        *Profit is based on the calculation provided by the current application.
+        Verify its formula before relying on it for accounting decisions.
+    </p>
+
+</div>
+
+{% endblock %}

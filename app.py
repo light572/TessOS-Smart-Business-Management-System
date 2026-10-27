@@ -132,7 +132,70 @@ def add_expense():
 
 @app.route('/reports')
 @login_required
-def reports():
- db=get_db(); b=bid(); sales=db.execute('SELECT COUNT(*) count,COALESCE(SUM(total_amount),0) total FROM sales WHERE business_id=?',(b,)).fetchone(); expenses=db.execute('SELECT COUNT(*) count,COALESCE(SUM(amount),0) total FROM expenses WHERE business_id=?',(b,)).fetchone(); stock=db.execute('SELECT COUNT(*) products,COALESCE(SUM(stock_quantity*buying_price),0) value FROM products WHERE business_id=?',(b,)).fetchone(); db.close(); return render_template('reports.html',sales=sales,expenses=expenses,stock=stock)
 
-if __name__=='__main__': app.run(host='0.0.0.0',port=5000,debug=True)
+def reports():
+    db = get_db()
+    b = bid()
+
+    # Overall sales summary
+    sales = db.execute(
+        '''SELECT COUNT(*) AS count,
+                  COALESCE(SUM(total_amount), 0) AS total
+           FROM sales
+           WHERE business_id = ?''',
+        (b,)
+    ).fetchone()
+
+    # Sales totals grouped by payment method
+    payment_totals = db.execute(
+        '''SELECT payment_method,
+                  COUNT(*) AS count,
+                  COALESCE(SUM(total_amount), 0) AS total
+           FROM sales
+           WHERE business_id = ?
+           GROUP BY payment_method''',
+        (b,)
+    ).fetchall()
+
+    # Existing expense summary
+    expenses = db.execute(
+        '''SELECT COUNT(*) AS count,
+                  COALESCE(SUM(amount), 0) AS total
+           FROM expenses
+           WHERE business_id = ?''',
+        (b,)
+    ).fetchone()
+
+    # Existing inventory summary
+    stock = db.execute(
+        '''SELECT COUNT(*) AS products,
+                  COALESCE(SUM(stock_quantity * buying_price), 0) AS value
+           FROM products
+           WHERE business_id = ?''',
+        (b,)
+    ).fetchone()
+
+    db.close()
+
+    payment_summary = {
+        'cash': {'count': 0, 'total': 0},
+        'mpesa': {'count': 0, 'total': 0},
+        'card': {'count': 0, 'total': 0}
+    }
+
+    for row in payment_totals:
+        method = (row['payment_method'] or 'cash').strip().lower()
+
+        if method in payment_summary:
+            payment_summary[method] = {
+                'count': row['count'],
+                'total': row['total']
+            }
+
+    return render_template(
+        'reports.html',
+        sales=sales,
+        expenses=expenses,
+        stock=stock,
+        payment_summary=payment_summary
+    )

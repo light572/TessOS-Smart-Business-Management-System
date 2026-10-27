@@ -1,1 +1,251 @@
-{% extends 'base.html' %}{% block content %}<div class="top"><div><h1>POS</h1><p>Record a sale and reduce stock automatically.</p></div><a class="btn light" href="/dashboard">Dashboard</a></div><section class="panel"><form method="post" action="/pos/sale" id="saleform"><div id="sale-items"><div class="sale-line"><select name="product_id" required>{% for p in products %}<option value="{{p['id']}}">{{p['name']}} — KSh {{'%.2f'|format(p['selling_price'])}} ({{p['stock_quantity']}})</option>{% endfor %}</select><input name="quantity" type="number" min="1" value="1" required></div></div><button type="button" class="btn light" onclick="addSaleLine()">＋ Add another item</button><label class="inline-label">Payment <select name="payment_method"><option value="cash">Cash</option><option value="mpesa">M-Pesa</option><option value="card">Card</option></select></label><button class="btn" type="submit">Complete Sale</button></form></section>{% endblock %}
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="pos-page">
+
+    <header class="pos-top">
+        <div>
+            <span class="pos-eyebrow">SALES MANAGEMENT</span>
+            <h1>Point of Sale</h1>
+            <p>Record customer purchases and update your stock through checkout.</p>
+        </div>
+
+        <a href="/dashboard" class="pos-back-btn">
+            <span>←</span> Dashboard
+        </a>
+    </header>
+
+    {% if not products %}
+    <section class="pos-empty">
+        <div class="pos-empty-icon">▤</div>
+        <h2>No products available</h2>
+        <p>Add products to your inventory before recording a sale.</p>
+        <a href="/products/add" class="pos-primary-btn">＋ Add your first product</a>
+    </section>
+    {% else %}
+
+    <div class="pos-layout">
+
+        <section class="pos-checkout-card">
+
+            <div class="pos-card-heading">
+                <div class="pos-heading-icon">🛒</div>
+                <div>
+                    <h2>New sale</h2>
+                    <p>Add the items the customer is purchasing.</p>
+                </div>
+            </div>
+
+            <form method="post" action="/pos/sale" id="saleform">
+
+                <div class="pos-items-heading">
+                    <span>SALE ITEMS</span>
+                    <span id="pos-item-count">{{ products|length and 1 or 0 }} item line</span>
+                </div>
+
+                <div id="sale-items">
+                    <div class="sale-line pos-sale-line">
+
+                        <div class="pos-field">
+                            <label>Product</label>
+                            <select name="product_id" required>
+                                {% for p in products %}
+                                <option value="{{ p['id'] }}"
+                                    {% if loop.first %}selected{% endif %}>
+                                    {{ p['name'] }} — KSh {{ '%.2f'|format(p['selling_price']) }} (Stock: {{ p['stock_quantity'] }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="pos-field pos-quantity-field">
+                            <label>Quantity</label>
+                            <input
+                                name="quantity"
+                                type="number"
+                                min="1"
+                                value="1"
+                                required
+                                inputmode="numeric"
+                            >
+                        </div>
+
+                        <button type="button"
+                                class="pos-remove-btn"
+                                aria-label="Remove item"
+                                title="Remove item"
+                                onclick="removeSaleLine(this)"
+                                disabled>
+                            ×
+                        </button>
+
+                    </div>
+                </div>
+
+                <button type="button" class="pos-add-item-btn" onclick="addSaleLine()">
+                    <span>＋</span> Add another item
+                </button>
+
+                <div class="pos-divider"></div>
+
+                <div class="pos-payment-heading">
+                    <h3>Payment details</h3>
+                    <p>Select how the customer will pay.</p>
+                </div>
+
+                <div class="pos-field">
+                    <label for="payment-method">Payment method</label>
+                    <select name="payment_method" id="payment-method">
+                        <option value="cash">Cash</option>
+                        <option value="mpesa">M-Pesa</option>
+                        <option value="card">Card</option>
+                    </select>
+                </div>
+
+                <div class="pos-submit-row">
+                    <a href="/dashboard" class="pos-cancel-btn">Cancel</a>
+                    <button type="submit" class="pos-primary-btn" id="complete-sale-btn">
+                        <span>✓</span> Complete sale
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <aside class="pos-side-panel">
+
+            <div class="pos-summary-card">
+                <span class="pos-summary-eyebrow">CHECKOUT SUMMARY</span>
+                <div class="pos-summary-icon">▣</div>
+                <h3>Sale overview</h3>
+                <p>Review the items and quantities before completing the transaction.</p>
+
+                <div class="pos-summary-row">
+                    <span>Item lines</span>
+                    <strong id="pos-summary-lines">1</strong>
+                </div>
+
+                <div class="pos-summary-row">
+                    <span>Total units</span>
+                    <strong id="pos-summary-units">1</strong>
+                </div>
+
+                <div class="pos-summary-note">
+                    <span>i</span>
+                    <p>Confirm each product and quantity before submitting. Your app handles the sale and stock update.</p>
+                </div>
+            </div>
+
+            <div class="pos-help-card">
+                <span class="pos-help-icon">✦</span>
+                <h3>Quick checkout tips</h3>
+                <ul>
+                    <li>Check the product name and selling price.</li>
+                    <li>Enter the correct quantity for every item.</li>
+                    <li>Confirm the payment method with the customer.</li>
+                </ul>
+            </div>
+
+        </aside>
+
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+(function () {
+    const saleItems = document.getElementById("sale-items");
+    const itemCount = document.getElementById("pos-item-count");
+    const summaryLines = document.getElementById("pos-summary-lines");
+    const summaryUnits = document.getElementById("pos-summary-units");
+    const saleForm = document.getElementById("saleform");
+
+    if (!saleItems) return;
+
+    function updateSaleSummary() {
+        const lines = saleItems.querySelectorAll(".sale-line");
+        let units = 0;
+
+        lines.forEach(function (line) {
+            const quantityInput = line.querySelector('[name="quantity"]');
+            const quantity = quantityInput ? parseInt(quantityInput.value, 10) : 0;
+
+            if (Number.isFinite(quantity) && quantity > 0) {
+                units += quantity;
+            }
+
+            const removeButton = line.querySelector(".pos-remove-btn");
+            if (removeButton) {
+                removeButton.disabled = lines.length <= 1;
+            }
+        });
+
+        if (itemCount) {
+            itemCount.textContent = lines.length + (lines.length === 1 ? " item line" : " item lines");
+        }
+        if (summaryLines) summaryLines.textContent = lines.length;
+        if (summaryUnits) summaryUnits.textContent = units;
+    }
+
+    window.addSaleLine = function () {
+        const firstLine = saleItems.querySelector(".sale-line");
+        if (!firstLine) return;
+
+        const newLine = firstLine.cloneNode(true);
+        const quantityInput = newLine.querySelector('[name="quantity"]');
+
+        if (quantityInput) quantityInput.value = "1";
+
+        const removeButton = newLine.querySelector(".pos-remove-btn");
+        if (removeButton) removeButton.disabled = false;
+
+        saleItems.appendChild(newLine);
+        updateSaleSummary();
+    };
+
+    window.removeSaleLine = function (button) {
+        const lines = saleItems.querySelectorAll(".sale-line");
+
+        if (lines.length <= 1) return;
+
+        const line = button.closest(".sale-line");
+        if (line) line.remove();
+
+        updateSaleSummary();
+    };
+
+    saleItems.addEventListener("input", updateSaleSummary);
+    saleItems.addEventListener("change", updateSaleSummary);
+
+    if (saleForm) {
+        saleForm.addEventListener("submit", function (event) {
+            const lines = saleItems.querySelectorAll(".sale-line");
+
+            if (lines.length === 0) {
+                event.preventDefault();
+                alert("Please add at least one item.");
+                return;
+            }
+
+            for (const line of lines) {
+                const product = line.querySelector('[name="product_id"]');
+                const quantity = line.querySelector('[name="quantity"]');
+
+                if (!product || !product.value || !quantity ||
+                    !Number.isInteger(Number(quantity.value)) ||
+                    Number(quantity.value) < 1) {
+                    event.preventDefault();
+                    alert("Please select a product and enter a valid quantity for every item.");
+                    return;
+                }
+            }
+        });
+    }
+
+    updateSaleSummary();
+})();
+</script>
+
+{% endblock %}

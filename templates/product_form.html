@@ -1,1 +1,186 @@
-{% extends 'base.html' %}{% block content %}<div class="top"><div><h1>{{title}}</h1><p>Enter product details.</p></div><a class="btn light" href="/products">← Back</a></div><section class="panel formpanel"><form method="post"><label>Product name<input name="name" required value="{{product['name'] if product else ''}}"></label><label>Category<input name="category" value="{{product['category'] if product else ''}}"></label><div class="two"><label>Buying price<input type="number" step=".01" min="0" name="buying_price" value="{{product['buying_price'] if product else 0}}"></label><label>Selling price<input type="number" step=".01" min="0" name="selling_price" value="{{product['selling_price'] if product else 0}}"></label></div><div class="two"><label>Current stock<input type="number" min="0" name="stock_quantity" value="{{product['stock_quantity'] if product else 0}}"></label><label>Reorder level<input type="number" min="0" name="reorder_level" value="{{product['reorder_level'] if product else 5}}"></label></div><button class="btn">{{'Save Changes' if product else 'Add Product'}}</button></form></section>{% endblock %}
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="product-form-page">
+
+    <header class="product-form-top">
+        <div>
+            <span class="product-form-eyebrow">INVENTORY MANAGEMENT</span>
+            <h1>{{ title }}</h1>
+            <p>Enter accurate product details to keep your inventory up to date.</p>
+        </div>
+
+        <a class="product-back-btn" href="/products">
+            <span>←</span> Back to products
+        </a>
+    </header>
+
+    <div class="product-form-layout">
+
+        <section class="product-form-card">
+
+            <div class="product-form-card-heading">
+                <div class="product-form-heading-icon">▤</div>
+                <div>
+                    <h2>Product information</h2>
+                    <p>Complete the fields below.</p>
+                </div>
+            </div>
+
+            <form method="post" class="premium-product-form">
+
+                <div class="product-field">
+                    <label for="product-name">Product name <span>*</span></label>
+                    <input
+                        id="product-name"
+                        type="text"
+                        name="name"
+                        placeholder="e.g. Cooking oil 1 litre"
+                        required
+                        value="{{ product['name'] if product else '' }}"
+                    >
+                    <small>Use a clear name that is easy to identify during a sale.</small>
+                </div>
+
+                <div class="product-field">
+                    <label for="product-category">Category</label>
+                    <input
+                        id="product-category"
+                        type="text"
+                        name="category"
+                        placeholder="e.g. Food, Beverages, Household"
+                        value="{{ product['category'] if product else '' }}"
+                    >
+                    <small>Group similar products together for easier management.</small>
+                </div>
+
+                <div class="product-form-divider"></div>
+
+                <div class="product-form-subheading">
+                    <h3>Pricing</h3>
+                    <p>Enter the purchase cost and selling price.</p>
+                </div>
+
+                <div class="product-form-two">
+
+                    <div class="product-field">
+                        <label for="buying-price">Buying price (KSh)</label>
+                        <div class="product-input-prefix">
+                            <span>KSh</span>
+                            <input
+                                id="buying-price"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                name="buying_price"
+                                value="{{ product['buying_price'] if product else 0 }}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="product-field">
+                        <label for="selling-price">Selling price (KSh)</label>
+                        <div class="product-input-prefix">
+                            <span>KSh</span>
+                            <input
+                                id="selling-price"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                name="selling_price"
+                                value="{{ product['selling_price'] if product else 0 }}"
+                            >
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="product-form-divider"></div>
+
+                <div class="product-form-subheading">
+                    <h3>Stock management</h3>
+                    <p>Set the current quantity and low-stock alert level.</p>
+                </div>
+
+                <div class="product-form-two">
+
+                    <div class="product-field">
+                        <label for="stock-quantity">Current stock</label>
+                        <input
+                            id="stock-quantity"
+                            type="number"
+                            min="0"
+                            name="stock_quantity"
+                            value="{{ product['stock_quantity'] if product else 0 }}"
+                        >
+                        <small>How many units are currently available?</small>
+                    </div>
+
+                    <div class="product-field">
+                        <label for="reorder-level">Reorder level</label>
+                        <input
+                            id="reorder-level"
+                            type="number"
+                            min="0"
+                            name="reorder_level"
+                            value="{{ product['reorder_level'] if product else 5 }}"
+                        >
+                        <small>You'll see a low-stock warning at or below this quantity.</small>
+                    </div>
+
+                </div>
+
+                <div class="product-form-actions">
+                    <a class="product-cancel-btn" href="/products">Cancel</a>
+                    <button class="product-save-btn" type="submit">
+                        <span>✓</span>
+                        {{ 'Save Changes' if product else 'Add Product' }}
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <aside class="product-form-tip">
+            <div class="product-tip-icon">✦</div>
+            <span class="product-tip-eyebrow">INVENTORY TIP</span>
+            <h3>Keep your stock accurate.</h3>
+            <p>
+                Record the correct buying price, selling price, and available
+                quantity to help Tess Mama Enterprise maintain reliable stock
+                and sales records.
+            </p>
+
+            <div class="product-tip-rule"></div>
+
+            <div class="product-tip-item">
+                <span>01</span>
+                <div>
+                    <strong>Buying price</strong>
+                    <p>What the business pays to acquire the product.</p>
+                </div>
+            </div>
+
+            <div class="product-tip-item">
+                <span>02</span>
+                <div>
+                    <strong>Selling price</strong>
+                    <p>What the customer pays for one unit.</p>
+                </div>
+            </div>
+
+            <div class="product-tip-item">
+                <span>03</span>
+                <div>
+                    <strong>Reorder level</strong>
+                    <p>The quantity that triggers a low-stock warning.</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

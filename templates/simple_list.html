@@ -1,1 +1,109 @@
-{% extends 'base.html' %}{% block content %}<div class="top"><div><h1>{{title}}</h1><p>{{subtitle}}</p></div></div><section class="panel"><form class="addmini" method="post" action="/{{kind}}/add"><input name="name" placeholder="{{title[:-1] if title.endswith('s') else title}} name" required><input name="phone" placeholder="Phone"><button class="btn">＋ Add</button></form><table><tr>{% for f,l in fields %}<th>{{l}}</th>{% endfor %}</tr>{% for r in rows %}<tr>{% for f,l in fields %}<td>{% if f=='balance' %}KSh {{'%.2f'|format(r[f])}}{% else %}{{r[f]}}{% endif %}</td>{% endfor %}</tr>{% else %}<tr><td colspan="3" class="empty">No records yet.</td></tr>{% endfor %}</table></section>{% endblock %}
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="simple-list-page">
+
+    <div class="simple-list-header">
+        <div>
+            <span class="simple-list-eyebrow">BUSINESS RECORDS</span>
+            <h1>{{ title }}</h1>
+            <p>{{ subtitle }}</p>
+        </div>
+
+        <div class="simple-list-count">
+            <span class="simple-list-count-number">{{ rows|length }}</span>
+            <span>Total records</span>
+        </div>
+    </div>
+
+    <section class="simple-list-add-card">
+        <div class="simple-list-section-heading">
+            <div class="simple-list-add-icon">＋</div>
+            <div>
+                <h2>Add {{ title[:-1] if title.endswith('s') else title }}</h2>
+                <p>Enter the details below to create a new record.</p>
+            </div>
+        </div>
+
+        <form class="simple-list-form" method="post" action="/{{ kind }}/add">
+            <div class="simple-list-field">
+                <label for="record-name">Name</label>
+                <input
+                    id="record-name"
+                    name="name"
+                    placeholder="{{ title[:-1] if title.endswith('s') else title }} name"
+                    required
+                >
+            </div>
+
+            <div class="simple-list-field">
+                <label for="record-phone">Phone number</label>
+                <input
+                    id="record-phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="Enter phone number"
+                >
+            </div>
+
+            <button class="simple-list-submit" type="submit">
+                <span>＋</span> Add Record
+            </button>
+        </form>
+    </section>
+
+    <section class="simple-list-records-card">
+        <div class="simple-list-records-heading">
+            <div>
+                <h2>{{ title }} Directory</h2>
+                <p>View your saved business records below.</p>
+            </div>
+            <span class="simple-list-records-badge">
+                {{ rows|length }} records
+            </span>
+        </div>
+
+        {% if rows %}
+        <div class="simple-list-table-wrap">
+            <table class="simple-list-table">
+                <thead>
+                    <tr>
+                        {% for f, l in fields %}
+                        <th>{{ l }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for r in rows %}
+                    <tr>
+                        {% for f, l in fields %}
+                        <td>
+                            {% if f == 'balance' %}
+                                <span class="simple-list-balance">
+                                    KSh {{ '%.2f'|format(r[f]) }}
+                                </span>
+                            {% elif f == 'phone' %}
+                                {{ r[f] or '—' }}
+                            {% else %}
+                                {{ r[f] }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="simple-list-empty">
+            <div class="simple-list-empty-icon">▤</div>
+            <h3>No records yet</h3>
+            <p>Once you add a record, it will appear here.</p>
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

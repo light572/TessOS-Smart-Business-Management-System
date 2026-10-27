@@ -1,1 +1,135 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TessOS Login</title><link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}"></head><body class="login"><div class="loginbox"><div class="mark">T</div><h1>TessOS</h1><p>Smart Business Management</p>{% if error %}<div class="flash error">{{error}}</div>{% endif %}<form method="post"><input name="username" placeholder="Username" required><input name="password" type="password" placeholder="Password" required><button>Sign In</button></form><small>Tess Mama Enterprise</small></div></body></html>
+﻿
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c2c">
+    <title>Sign In | TessOS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login">
+
+    <main class="login-page">
+        <section class="login-visual">
+            <div class="login-brand">
+                <div class="mark">T</div>
+                <span>Tess<span class="brand-accent">OS</span></span>
+            </div>
+
+            <div class="login-message">
+                <span class="eyebrow">BUSINESS MANAGEMENT, SIMPLIFIED</span>
+                <h1>Your business.<br>Under control.</h1>
+                <p>
+                    Manage sales, track inventory, organize expenses,
+                    and understand your business from one place.
+                </p>
+
+                <div class="login-feature">
+                    <span class="feature-icon">✓</span>
+                    <span>Sales and inventory management</span>
+                </div>
+                <div class="login-feature">
+                    <span class="feature-icon">✓</span>
+                    <span>Clear, organized business records</span>
+                </div>
+                <div class="login-feature">
+                    <span class="feature-icon">✓</span>
+                    <span>Reports to support better decisions</span>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                <span>BUILT FOR BETTER BUSINESS</span>
+                <span>© TessOS</span>
+            </div>
+        </section>
+
+        <section class="login-form-panel">
+            <div class="login-form-inner">
+                <div class="mobile-brand">
+                    <div class="mark">T</div>
+                    <span>Tess<span class="brand-accent">OS</span></span>
+                </div>
+
+                <div class="welcome-label">WELCOME BACK</div>
+                <h2>Sign in to TessOS</h2>
+                <p class="login-subtitle">
+                    Enter your account details to continue.
+                </p>
+
+                {% if error %}
+                <div class="flash error" role="alert">{{ error }}</div>
+                {% endif %}
+
+                <form method="post" class="premium-login-form">
+                    <label for="username">Username</label>
+                    <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                        autofocus
+                    >
+
+                    <div class="password-label-row">
+                        <label for="password">Password</label>
+                    </div>
+
+                    <div class="password-field">
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="togglePassword"
+                            aria-label="Show password"
+                            aria-pressed="false"
+                        >Show</button>
+                    </div>
+
+                    <button type="submit" class="login-submit">
+                        Sign in <span aria-hidden="true">→</span>
+                    </button>
+                </form>
+
+                <div class="login-security">
+                    <span aria-hidden="true">◆</span>
+                    Sign in with your authorized account
+                </div>
+
+                <div class="login-business">
+                    <span class="business-line"></span>
+                    <span>Tess Mama Enterprise</span>
+                    <span class="business-line"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", function () {
+            const showing = passwordInput.type === "text";
+            passwordInput.type = showing ? "password" : "text";
+            togglePassword.textContent = showing ? "Show" : "Hide";
+            togglePassword.setAttribute("aria-pressed", String(!showing));
+            togglePassword.setAttribute(
+                "aria-label",
+                showing ? "Show password" : "Hide password"
+            );
+        });
+    </script>
+
+</body>
+</html>

@@ -1,1 +1,169 @@
-{% extends 'base.html' %}{% block content %}<div class="top"><div><h1>Reports</h1><p>Business overview from TessOS.</p></div></div><div class="stats"><div><small>Total Sales</small><h2>KSh {{'%.2f'|format(sales['total'])}}</h2><small>{{sales['count']}} transactions</small></div><div><small>Total Expenses</small><h2>KSh {{'%.2f'|format(expenses['total'])}}</h2><small>{{expenses['count']}} records</small></div><div><small>Stock Value</small><h2>KSh {{'%.2f'|format(stock['value'])}}</h2><small>{{stock['products']}} products</small></div></div>{% endblock %}
+﻿
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="reports-page">
+
+    <div class="reports-header">
+        <div>
+            <span class="reports-eyebrow">BUSINESS INTELLIGENCE</span>
+            <h1>Business Reports</h1>
+            <p>A clear overview of sales, expenses and inventory at Tess Mama Enterprise.</p>
+        </div>
+        <button class="reports-print-btn" type="button" onclick="window.print()">
+            <span>⎙</span> Print Report
+        </button>
+    </div>
+
+    <div class="reports-intro">
+        <div class="reports-intro-icon">▤</div>
+        <div>
+            <h2>Your business at a glance</h2>
+            <p>Review the key figures recorded in your TessOS system.</p>
+        </div>
+    </div>
+
+    <div class="reports-stats">
+
+        <article class="report-stat report-sales">
+            <div class="report-stat-top">
+                <span class="report-stat-label">Total Sales</span>
+                <span class="report-stat-icon">↗</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(sales['total']) }}</h2>
+            <div class="report-stat-footer">
+                <span class="report-stat-dot"></span>
+                {{ sales['count'] }} transactions recorded
+            </div>
+        </article>
+
+        <article class="report-stat report-expenses">
+            <div class="report-stat-top">
+                <span class="report-stat-label">Total Expenses</span>
+                <span class="report-stat-icon">↘</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(expenses['total']) }}</h2>
+            <div class="report-stat-footer">
+                <span class="report-stat-dot"></span>
+                {{ expenses['count'] }} expense records
+            </div>
+        </article>
+
+        <article class="report-stat report-stock">
+            <div class="report-stat-top">
+                <span class="report-stat-label">Stock Value</span>
+                <span class="report-stat-icon">▦</span>
+            </div>
+            <h2>KSh {{ '%.2f'|format(stock['value']) }}</h2>
+            <div class="report-stat-footer">
+                <span class="report-stat-dot"></span>
+                {{ stock['products'] }} products in inventory
+            </div>
+        </article>
+
+    </div>
+    
+<section class="reports-payment-card">
+    <div class="reports-payment-heading">
+        <h2>Sales by payment method</h2>
+        <p>See how customers have paid for recorded sales.</p>
+    </div>
+
+    <div class="reports-payment-grid">
+        <article class="reports-payment-item">
+            <span class="reports-payment-icon">💵</span>
+            <div>
+                <span class="reports-payment-label">Cash</span>
+                <h3>KSh {{ '%.2f'|format(payment_summary['cash']['total']) }}</h3>
+                <small>{{ payment_summary['cash']['count'] }} transactions</small>
+            </div>
+        </article>
+
+        <article class="reports-payment-item">
+            <span class="reports-payment-icon">📱</span>
+            <div>
+                <span class="reports-payment-label">M-Pesa</span>
+                <h3>KSh {{ '%.2f'|format(payment_summary['mpesa']['total']) }}</h3>
+                <small>{{ payment_summary['mpesa']['count'] }} transactions</small>
+            </div>
+        </article>
+
+        <article class="reports-payment-item">
+            <span class="reports-payment-icon">💳</span>
+            <div>
+                <span class="reports-payment-label">Card</span>
+                <h3>KSh {{ '%.2f'|format(payment_summary['card']['total']) }}</h3>
+                <small>{{ payment_summary['card']['count'] }} transactions</small>
+            </div>
+        </article>
+    </div>
+</section>
+
+    <section class="reports-summary-card">
+        <div class="reports-summary-heading">
+            <div>
+                <h2>Financial overview</h2>
+                <p>Compare your recorded sales and expenses.</p>
+            </div>
+            <span class="reports-summary-badge">Overview</span>
+        </div>
+
+        <div class="reports-financial-row">
+            <div class="reports-financial-label">
+                <span class="reports-financial-symbol sales-symbol">＋</span>
+                <div>
+                    <strong>Total sales</strong>
+                    <small>Money recorded from sales</small>
+                </div>
+            </div>
+            <strong class="reports-financial-value">
+                KSh {{ '%.2f'|format(sales['total']) }}
+            </strong>
+        </div>
+
+        <div class="reports-financial-row">
+            <div class="reports-financial-label">
+                <span class="reports-financial-symbol expense-symbol">−</span>
+                <div>
+                    <strong>Total expenses</strong>
+                    <small>Recorded business spending</small>
+                </div>
+            </div>
+            <strong class="reports-financial-value">
+                KSh {{ '%.2f'|format(expenses['total']) }}
+            </strong>
+        </div>
+
+        <div class="reports-note">
+            <span>i</span>
+            <p>
+                These figures summarize recorded sales and expenses. They do not
+                represent net profit because product costs, stock purchases and
+                other accounting adjustments may also need to be considered.
+            </p>
+        </div>
+    </section>
+
+    <section class="reports-inventory-card">
+        <div class="reports-inventory-icon">▦</div>
+        <div class="reports-inventory-content">
+            <h2>Inventory snapshot</h2>
+            <p>Current inventory value and product count recorded in TessOS.</p>
+        </div>
+        <div class="reports-inventory-number">
+            <strong>{{ stock['products'] }}</strong>
+            <span>Products</span>
+        </div>
+        <div class="reports-inventory-value">
+            <strong>KSh {{ '%.2f'|format(stock['value']) }}</strong>
+            <span>Stock value</span>
+        </div>
+    </section>
+
+    <div class="reports-footer-note">
+        <span>✓</span>
+        <p>Report figures are based on the information currently recorded in TessOS.</p>
+    </div>
+
+</div>
+{% endblock %}

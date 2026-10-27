@@ -1,1 +1,125 @@
-{% extends 'base.html' %}{% block content %}<div class="top"><div><h1>Expenses</h1><p>Total recorded: KSh {{'%.2f'|format(total)}}</p></div></div><section class="panel"><form class="addmini" method="post" action="/expenses/add"><input name="description" placeholder="Expense description" required><input name="amount" type="number" step=".01" min="0" placeholder="Amount" required><input name="category" placeholder="Category"><button class="btn">＋ Add Expense</button></form><table><tr><th>Description</th><th>Amount</th><th>Category</th><th>Date</th></tr>{% for r in rows %}<tr><td>{{r['description']}}</td><td>KSh {{'%.2f'|format(r['amount'])}}</td><td>{{r['category']}}</td><td>{{r['created_at']}}</td></tr>{% else %}<tr><td colspan="4" class="empty">No expenses recorded.</td></tr>{% endfor %}</table></section>{% endblock %}
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="expenses-page">
+
+    <div class="expenses-top">
+        <div>
+            <span class="expenses-eyebrow">FINANCIAL MANAGEMENT</span>
+            <h1>Expenses</h1>
+            <p>Track business spending and keep your finances organized.</p>
+        </div>
+        <div class="expenses-total-card">
+            <span>Total recorded expenses</span>
+            <h2>KSh {{ '%.2f'|format(total) }}</h2>
+            <small>All recorded expenses</small>
+        </div>
+    </div>
+
+    <section class="expenses-add-card">
+        <div class="expenses-section-heading">
+            <div class="expenses-heading-icon">＋</div>
+            <div>
+                <h2>Record an expense</h2>
+                <p>Enter the details of a business expense below.</p>
+            </div>
+        </div>
+
+        <form class="expenses-form" method="post" action="/expenses/add">
+            <div class="expenses-field">
+                <label for="expense-description">Description</label>
+                <input
+                    id="expense-description"
+                    name="description"
+                    placeholder="e.g. Transport, electricity, supplies"
+                    required
+                >
+            </div>
+
+            <div class="expenses-field">
+                <label for="expense-amount">Amount (KSh)</label>
+                <input
+                    id="expense-amount"
+                    name="amount"
+                    type="number"
+                    step=".01"
+                    min="0"
+                    placeholder="0.00"
+                    required
+                >
+            </div>
+
+            <div class="expenses-field">
+                <label for="expense-category">Category</label>
+                <input
+                    id="expense-category"
+                    name="category"
+                    placeholder="e.g. Transport"
+                >
+            </div>
+
+            <button class="expenses-submit" type="submit">
+                <span>＋</span> Add Expense
+            </button>
+        </form>
+    </section>
+
+    <section class="expenses-history-card">
+        <div class="expenses-history-heading">
+            <div>
+                <h2>Expense history</h2>
+                <p>Review the expenses recorded for your business.</p>
+            </div>
+            <span class="expenses-record-count">
+                {{ rows|length }} records
+            </span>
+        </div>
+
+        {% if rows %}
+        <div class="expenses-table-wrap">
+            <table class="expenses-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Date recorded</th>
+                        <th class="expenses-amount-column">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in rows %}
+                    <tr>
+                        <td>
+                            <div class="expenses-description">
+                                <span class="expenses-row-icon">↗</span>
+                                <strong>{{ r['description'] }}</strong>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="expenses-category">
+                                {{ r['category'] or 'Uncategorized' }}
+                            </span>
+                        </td>
+                        <td class="expenses-date">{{ r['created_at'] }}</td>
+                        <td class="expenses-amount-column">
+                            <strong class="expenses-amount">
+                                KSh {{ '%.2f'|format(r['amount']) }}
+                            </strong>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="expenses-empty">
+            <div class="expenses-empty-icon">↗</div>
+            <h3>No expenses recorded yet</h3>
+            <p>Your recorded business expenses will appear here.</p>
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}
