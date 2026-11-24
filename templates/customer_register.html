@@ -1,0 +1,147 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c2c">
+    <title>Create Account | TessOS</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .customer-register {
+            max-width: 480px;
+            margin: 50px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.08);
+        }
+
+        .customer-register h1 {
+            color: #101c2c;
+            margin-bottom: 8px;
+        }
+
+        .customer-register label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: 600;
+        }
+
+        .customer-register input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #dce2e8;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .customer-register button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #101c2c;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .customer-register a {
+            color: #1769aa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="customer-register">
+
+        <h1>Create your account</h1>
+
+        <p>Welcome to Tess Mama Enterprise. Register to shop online.</p>
+
+        {% if error %}
+        <div class="flash error" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <label for="name">Full name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Your full name"
+                required
+                maxlength="150"
+                autocomplete="name"
+            >
+
+            <label for="phone">Phone number</label>
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="e.g. 07XXXXXXXX"
+                required
+                maxlength="30"
+                autocomplete="tel"
+            >
+
+            <label for="email">Email address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+                maxlength="254"
+                autocomplete="email"
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="At least 8 characters"
+                required
+                minlength="8"
+                autocomplete="new-password"
+            >
+
+            <label for="confirm_password">Confirm password</label>
+            <input
+                type="password"
+                id="confirm_password"
+                name="confirm_password"
+                placeholder="Enter password again"
+                required
+                minlength="8"
+                autocomplete="new-password"
+            >
+
+            <button type="submit">
+                Create account
+            </button>
+
+        </form>
+
+        <p style="text-align:center; margin-top:22px;">
+            Already registered?
+            <a href="/customer/login">Sign in</a>
+        </p>
+
+        <p style="text-align:center;">
+            <a href="/">Back to TessOS</a>
+        </p>
+
+    </main>
+
+</body>
+</html>

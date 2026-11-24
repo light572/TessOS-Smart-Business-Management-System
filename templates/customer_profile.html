@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+
+    <h1>My Profile</h1>
+    <p>View and update your contact information.</p>
+
+    {% if error %}
+        <div class="flash error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/customer/profile">
+
+        <label>Full Name</label>
+        <input
+            type="text"
+            name="name"
+            value="{{ customer.name }}"
+            required
+        >
+
+        <label>Phone Number</label>
+        <input
+            type="text"
+            name="phone"
+            value="{{ customer.phone or '' }}"
+            required
+        >
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
+    <p><a href="/customer/dashboard">Back to Dashboard</a></p>
+
+</div>
+
+{% endblock %}

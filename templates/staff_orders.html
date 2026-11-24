@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+
+    <h1>Customer Orders</h1>
+    <p>Manage orders submitted through the customer portal.</p>
+
+    {% if orders %}
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for order in orders %}
+                <tr>
+<td>
+    <a href="/staff/orders/{{ order.id }}">
+        {{ order.id|string|truncate(8, True, '') }}
+    </a>
+</td>                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.phone }}</td>
+                    <td>KSh {{ order.total_amount }}</td>
+                    <td>
+    {% if order.payment_status == 'unpaid' %}
+        <form method="POST"
+              action="/staff/orders/{{ order.id }}/payment">
+
+            <select name="payment_method" required>
+                <option value="">Select payment</option>
+                <option value="cash">Cash</option>
+                <option value="mpesa">M-Pesa Till 6688759</option>
+            </select>
+
+            <button type="submit">
+                Confirm Payment
+            </button>
+        </form>
+    {% else %}
+        <strong>Paid</strong>
+        <br>
+        {{ order.payment_method|title }}
+    {% endif %}
+</td>
+                    <td>{{ order.status|title }}</td>
+                    <td>{{ order.created_at }}</td>
+
+                    <td>
+                        <form method="POST"
+                              action="/staff/orders/{{ order.id }}/status">
+
+                            <select name="status" required>
+                                {% for status in [
+                                    'pending',
+                                    'confirmed',
+                                    'processing',
+                                    'ready',
+                                    'completed',
+                                    'cancelled'
+                                ] %}
+                                <option value="{{ status }}"
+                                    {% if order.status == status %}
+                                    selected
+                                    {% endif %}>
+                                    {{ status|title }}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                            <button type="submit">
+                                Update
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+        <p>No customer orders have been received yet.</p>
+    {% endif %}
+
+    <p><a href="/dashboard">Back to Dashboard</a></p>
+
+</div>
+
+{% endblock %}

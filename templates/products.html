@@ -12,7 +12,7 @@
         </div>
 
         <a class="products-add-btn" href="/products/add">
-            <span>＋</span> Add Product
+            + Add Product
         </a>
     </header>
 
@@ -28,7 +28,7 @@
 
         <form class="products-filters" method="get" action="/products">
             <div class="products-search">
-                <span class="search-symbol">⌕</span>
+                <span class="search-symbol">Search:</span>
                 <input
                     type="text"
                     name="q"
@@ -118,7 +118,7 @@
 
                 <div class="inventory-actions">
                     <a class="inventory-edit-btn" href="/products/edit/{{ p['id'] }}">
-                        <span>✎</span> Edit product
+                        Edit product
                     </a>
 
                     <form method="post"
@@ -127,7 +127,7 @@
                         <button class="inventory-delete-btn" type="submit"
                                 aria-label="Delete {{ p['name'] }}"
                                 title="Delete product">
-                            <span>⌫</span>
+                            Delete
                         </button>
                     </form>
                 </div>
@@ -135,10 +135,10 @@
             </article>
             {% else %}
             <div class="products-empty">
-                <div class="products-empty-icon">▤</div>
+                <div class="products-empty-icon">No items</div>
                 <h3>No products found</h3>
                 <p>Try another search or category, or add your first product.</p>
-                <a class="products-add-btn" href="/products/add">＋ Add Product</a>
+                <a class="products-add-btn" href="/products/add">+ Add Product</a>
             </div>
             {% endfor %}
         </div>

@@ -12,7 +12,7 @@
         </div>
         <div class="business-badge">
             <span class="business-dot"></span>
-            Tess Mama Enterprise
+            {{ business_name }}
         </div>
     </header>
 
@@ -33,7 +33,7 @@
                 <span class="stat-icon">◆</span>
             </div>
             <h2>KSh {{ '%.2f'|format(profit) }}</h2>
-            <p>Based on current profit calculation</p>
+            <p>Gross profit less today's expenses</p>
         </article>
 
         <article class="dash-stat">
@@ -51,7 +51,7 @@
                 <span class="stat-icon">▦</span>
             </div>
             <h2>KSh {{ '%.2f'|format(stock_value) }}</h2>
-            <p>Current recorded inventory value</p>
+            <p>Current inventory value at buying price</p>
         </article>
 
     </section>
@@ -65,6 +65,7 @@
         </div>
 
         <div class="quick-actions">
+
             <a class="quick-action primary-action" href="/pos">
                 <span class="quick-icon">＋</span>
                 <span>
@@ -74,6 +75,7 @@
                 <span class="quick-arrow">→</span>
             </a>
 
+            {% if session.get('role') in ['owner', 'manager'] %}
             <a class="quick-action" href="/products/add">
                 <span class="quick-icon">▤</span>
                 <span>
@@ -83,7 +85,7 @@
                 <span class="quick-arrow">→</span>
             </a>
 
-            <a class="quick-action" href="/expenses">
+            <a class="quick-action" href="/expenses/add">
                 <span class="quick-icon">−</span>
                 <span>
                     <strong>Record Expense</strong>
@@ -91,6 +93,8 @@
                 </span>
                 <span class="quick-arrow">→</span>
             </a>
+            {% endif %}
+
         </div>
     </section>
 
@@ -182,8 +186,9 @@
     </section>
 
     <p class="dash-note">
-        *Profit is based on the calculation provided by the current application.
-        Verify its formula before relying on it for accounting decisions.
+        *Profit is calculated as gross profit on recorded sales
+        less recorded expenses for today. It is an estimate,
+        not a complete accounting statement.
     </p>
 
 </div>

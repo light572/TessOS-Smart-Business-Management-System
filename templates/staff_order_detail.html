@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+
+    <h1>Customer Order Details</h1>
+    <p>Review the customer's order and collection information.</p>
+
+    <div class="card">
+        <h2>Order Information</h2>
+
+        <p><strong>Order ID:</strong> {{ order.id }}</p>
+        <p><strong>Customer:</strong> {{ order.customer_name }}</p>
+        <p><strong>Phone:</strong> {{ order.phone }}</p>
+        <p><strong>Delivery / Collection:</strong> {{ order.delivery_address }}</p>
+        <p><strong>Payment:</strong> {{ order.payment_status|title }}</p>
+        <p><strong>Status:</strong> {{ order.status|title }}</p>
+        <p><strong>Date:</strong> {{ order.created_at }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Ordered Products</h2>
+
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.quantity|int if item.quantity == item.quantity|int else item.quantity }}</td>
+                        <td>KSh {{ "%.2f"|format(item.unit_price) }}</td>
+                        <td>KSh {{ "%.2f"|format(item.unit_price * item.quantity) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+<h2>Total: KSh {{ "%.2f"|format(order.total_amount) }}</h2>    </div>
+
+    <p>
+        <a href="/staff/orders">Back to Customer Orders</a>
+    </p>
+
+</div>
+
+{% endblock %}

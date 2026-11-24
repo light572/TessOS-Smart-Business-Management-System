@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Orders | Tess Mama Enterprise</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #172334;
+        }
+
+        header {
+            background: #101c2c;
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .orders-box {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.04);
+        }
+
+        .order {
+            padding: 20px 0;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            background: #eef5ff;
+            color: #1769aa;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .paid {
+            background: #e8f7ed;
+            color: #237a43;
+        }
+
+        .unpaid {
+            background: #fff3dc;
+            color: #946200;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px 10px;
+        }
+
+        .empty a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 12px 18px;
+            background: #101c2c;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .order a {
+            color: #1769aa;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Tess Mama Enterprise</h2>
+
+    <nav>
+        <a href="/customer/dashboard">My Account</a>
+        <a href="/customer/products">Shop</a>
+        <a href="/customer/cart">My Cart</a>
+        <a href="/customer/orders">My Orders</a>
+        <a href="/customer/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="orders-box">
+
+        <h1>My Orders</h1>
+
+        <p>View your purchases and track order progress.</p>
+
+        {% if orders %}
+
+            {% for order in orders %}
+
+            <article class="order">
+
+                <div class="order-top">
+
+                    <div>
+                        <h3>Order #{{ order.id|string|truncate(8, True, '') }}</h3>
+
+                        <p>
+                            Placed:
+                            {{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <span class="status">
+                            {{ order.status }}
+                        </span>
+
+                        <span class="status {{ order.payment_status }}">
+                            {{ order.payment_status }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <h3>
+                    KSh {{ "%.2f"|format(order.total_amount|float) }}
+                </h3>
+
+                <a href="/customer/orders/{{ order.id }}">
+                    View order details
+                </a>
+
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <h2>No orders yet</h2>
+
+                <p>Your online orders will appear here.</p>
+
+                <a href="/customer/products">Start shopping</a>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

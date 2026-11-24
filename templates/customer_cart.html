@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Cart | Tess Mama Enterprise</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #172334;
+        }
+
+        header {
+            background: #101c2c;
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .cart-box {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.04);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        .cart-item h3 { margin: 0 0 6px; }
+
+        input[type="number"] {
+            width: 75px;
+            padding: 9px;
+            border: 1px solid #dce2e8;
+            border-radius: 6px;
+        }
+
+        button, .checkout {
+            display: inline-block;
+            padding: 11px 16px;
+            border: 0;
+            border-radius: 7px;
+            background: #101c2c;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .remove {
+            background: #b42318;
+            margin-top: 8px;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 25px;
+        }
+
+        .empty {
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .empty a {
+            color: #1769aa;
+        }
+
+        @media(max-width: 600px) {
+            .cart-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Tess Mama Enterprise</h2>
+
+    <nav>
+        <a href="/customer/dashboard">My Account</a>
+        <a href="/customer/products">Shop</a>
+        <a href="/customer/cart">My Cart</a>
+        <a href="/customer/orders">My Orders</a>
+        <a href="/customer/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="cart-box">
+
+        <h1>My Shopping Cart</h1>
+
+        {% if cart_items %}
+
+            {% for item in cart_items %}
+
+            <div class="cart-item">
+
+                <div>
+                    <h3>{{ item.name }}</h3>
+                    <p>KSh {{ "%.2f"|format(item.selling_price|float) }} each</p>
+                </div>
+
+                <div>
+                    <form method="POST"
+                          action="/customer/cart/update/{{ item.id }}">
+
+                        <label for="quantity-{{ item.id }}">
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quantity-{{ item.id }}"
+                            name="quantity"
+                            value="{{ item.quantity }}"
+                            min="1"
+                            max="{{ item.stock_quantity|int }}"
+                            required
+                        >
+
+                        <button type="submit">Update</button>
+
+                    </form>
+                </div>
+
+                <div>
+                    <strong>
+                        KSh {{ "%.2f"|format(
+                            (item.selling_price * item.quantity)|float
+                        ) }}
+                    </strong>
+
+                    <form method="POST"
+                          action="/customer/cart/remove/{{ item.id }}">
+
+                        <button type="submit" class="remove">
+                            Remove
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            <div class="total">
+                Total: KSh {{ "%.2f"|format(total|float) }}
+            </div>
+
+            <p style="text-align:right; margin-top:25px;">
+                <a href="/customer/checkout" class="checkout">
+                    Proceed to Checkout
+                </a>
+            </p>
+
+        {% else %}
+
+            <div class="empty">
+                <h2>Your cart is empty</h2>
+                <p>Browse our products and add items to your cart.</p>
+                <a href="/customer/products">Continue shopping</a>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

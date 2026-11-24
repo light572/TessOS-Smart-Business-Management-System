@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Account | Tess Mama Enterprise</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #172334;
+        }
+
+        header {
+            background: #101c2c;
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.04);
+        }
+
+        .welcome h1 {
+            margin-top: 0;
+            color: #101c2c;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.04);
+        }
+
+        .card h3 { margin-top: 0; }
+
+        .card a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 11px 16px;
+            background: #101c2c;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #718096;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Tess Mama Enterprise</h2>
+
+    <nav>
+        <a href="/customer/dashboard">My Account</a>
+        <a href="/customer/products">Shop</a>
+        <a href="/customer/orders">My Orders</a>
+<a href="/customer/profile">My Profile</a>
+        <a href="/customer/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="welcome">
+        <h1>Welcome, {{ customer_name }}!</h1>
+
+        <p>
+            Welcome to your customer account.
+            You can browse products, place orders and track your purchases here.
+        </p>
+    </section>
+
+    <section class="cards">
+
+        <div class="card">
+            <h3>Browse Products</h3>
+            <p>Explore products available at Tess Mama Enterprise.</p>
+            <a href="/customer/products">Shop now</a>
+        </div>
+
+        <div class="card">
+            <h3>My Orders</h3>
+            <p>View your orders and check their status.</p>
+            <a href="/customer/orders">View orders</a>
+        </div>
+
+        <div class="card">
+            <h3>My Profile</h3>
+            <p>View your customer account details.</p>
+            <a href="/customer/profile">My profile</a>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Tess Mama Enterprise &copy; 2026
+</footer>
+
+</body>
+</html>

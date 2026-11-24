@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout | Tess Mama Enterprise</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #172334;
+        }
+
+        header {
+            background: #101c2c;
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        main {
+            max-width: 750px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .checkout-box {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.05);
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 13px 0;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #dce2e8;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            border: 0;
+            border-radius: 8px;
+            background: #101c2c;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .notice {
+            padding: 13px;
+            background: #eef5ff;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: #244c78;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Tess Mama Enterprise</h2>
+
+    <nav>
+        <a href="/customer/dashboard">My Account</a>
+        <a href="/customer/products">Shop</a>
+        <a href="/customer/cart">My Cart</a>
+        <a href="/customer/orders">My Orders</a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="checkout-box">
+
+        <h1>Checkout</h1>
+
+        <p>Review your order before submitting.</p>
+
+        {% if error %}
+        <p style="color:#b42318;">{{ error }}</p>
+        {% endif %}
+
+        <h3>Order summary</h3>
+
+        {% for item in cart_items %}
+
+        <div class="order-item">
+            <div>
+                <strong>{{ item.name }}</strong>
+                <p>Quantity: {{ item.quantity }}</p>
+            </div>
+
+            <strong>
+                KSh {{ "%.2f"|format(
+                    (item.selling_price * item.quantity)|float
+                ) }}
+            </strong>
+        </div>
+
+        {% endfor %}
+
+        <div class="total">
+            Total: KSh {{ "%.2f"|format(total|float) }}
+        </div>
+
+        <form method="POST" action="/customer/checkout">
+
+            <label for="phone">Contact phone number</label>
+
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value="{{ customer_phone }}"
+                placeholder="07XXXXXXXX"
+                required
+                maxlength="30"
+            >
+
+            <label for="delivery_address">Delivery address or collection details</label>
+
+            <textarea
+                id="delivery_address"
+                name="delivery_address"
+                placeholder="Enter delivery location or collection instructions"
+                required
+                maxlength="500"
+            ></textarea>
+
+            <div class="notice">
+                Your order will be submitted for confirmation.
+                Payment and stock deduction will be handled separately
+                when the business processes your order.
+            </div>
+
+            <button type="submit">
+                Place Order
+            </button>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>
